@@ -6,13 +6,13 @@ import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
 import './styles/element-variables.scss'
-// 使用中文语言包
 
 import '@/styles/index.scss' // global css
 
 import App from './App'
 import store from './store'
 import router from './router'
+import i18n from './lang' // i18n 国际化
 
 import './icons' // icon
 import './permission' // permission control
@@ -34,8 +34,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'medium' // set element-ui default size
-  // 使用中文，无需设置 locale
+  size: Cookies.get('size') || 'medium', // set element-ui default size
+  locale: Cookies.get('language') || 'zh' // 设置 element-ui 默认语言为中文
 })
 
 // register global utility filters
@@ -49,5 +49,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
