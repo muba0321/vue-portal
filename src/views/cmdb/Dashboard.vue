@@ -1,59 +1,65 @@
 <template>
   <div class="cmdb-dashboard">
-    <!-- 搜索和过滤 -->
-    <el-card class="filter-card" shadow="never">
-      <el-form :inline="true" :model="filters" class="filter-form">
-        <el-form-item label="快速搜索">
-          <el-input 
-            v-model="filters.search" 
-            placeholder="搜索名称/IP/描述"
-            clearable
-            @keyup.enter.native="handleSearch"
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </el-form-item>
+    <!-- 顶部工具栏 -->
+    <el-card class="toolbar-card" shadow="never">
+      <div class="toolbar-left">
+        <el-input 
+          v-model="filters.search" 
+          placeholder="快速搜索"
+          clearable
+          style="width: 240px"
+          @keyup.enter.native="handleSearch"
+        >
+          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
         
-        <el-form-item label="集群">
-          <el-select v-model="filters.cluster" placeholder="全部集群" clearable>
-            <el-option label="Infrastructure-Cluster" value="Infrastructure-Cluster" />
-            <el-option label="K8s-Production" value="K8s-Production" />
-            <el-option label="OpenClaw-Main" value="OpenClaw-Main" />
-          </el-select>
-        </el-form-item>
+        <el-select 
+          v-model="filters.cluster" 
+          placeholder="集群" 
+          clearable
+          style="width: 180px; margin-left: 12px"
+        >
+          <el-option label="Infrastructure-Cluster" value="Infrastructure-Cluster" />
+          <el-option label="K8s-Production" value="K8s-Production" />
+          <el-option label="OpenClaw-Main" value="OpenClaw-Main" />
+        </el-select>
         
-        <el-form-item label="状态">
-          <el-select v-model="filters.status" placeholder="全部状态" clearable>
-            <el-option label="在线" value="running" />
-            <el-option label="离线" value="stopped" />
-            <el-option label="异常" value="error" />
-          </el-select>
-        </el-form-item>
+        <el-select 
+          v-model="filters.status" 
+          placeholder="状态" 
+          clearable
+          style="width: 120px; margin-left: 12px"
+        >
+          <el-option label="在线" value="running" />
+          <el-option label="离线" value="stopped" />
+          <el-option label="异常" value="error" />
+        </el-select>
         
-        <el-form-item label="租户">
-          <el-select v-model="filters.tenant" placeholder="全部租户" clearable>
-            <el-option label="OpenClaw" value="OpenClaw" />
-          </el-select>
-        </el-form-item>
+        <el-select 
+          v-model="filters.tenant" 
+          placeholder="租户" 
+          clearable
+          style="width: 120px; margin-left: 12px"
+        >
+          <el-option label="OpenClaw" value="OpenClaw" />
+        </el-select>
         
-        <el-form-item>
-          <el-button type="primary" @click="handleSearch">
-            <i class="el-icon-search"></i> 查询
-          </el-button>
-          <el-button @click="handleReset">
-            <i class="el-icon-refresh"></i> 重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+        <el-button type="primary" @click="handleSearch" style="margin-left: 12px">
+          <i class="el-icon-search"></i> 查询
+        </el-button>
+        <el-button @click="handleReset">
+          <i class="el-icon-refresh"></i> 重置
+        </el-button>
+      </div>
       
-      <div class="filter-actions">
-        <el-button type="success" size="small" @click="handleAdd">
+      <div class="toolbar-right">
+        <el-button type="success" @click="handleAdd">
           <i class="el-icon-plus"></i> 添加
         </el-button>
-        <el-button type="primary" size="small" @click="handleImport">
+        <el-button type="primary" @click="handleImport">
           <i class="el-icon-upload"></i> 导入
         </el-button>
-        <el-button type="warning" size="small" @click="handleExport">
+        <el-button type="warning" @click="handleExport">
           <i class="el-icon-download"></i> 导出
         </el-button>
       </div>
@@ -86,7 +92,7 @@
       >
         <el-table-column type="selection" width="45" />
         
-        <el-table-column prop="cluster" label="集群" min-width="120">
+        <el-table-column prop="cluster" label="集群" min-width="140">
           <template slot-scope="scope">
             <el-tag size="small" :type="getClusterType(scope.row.cluster)">
               {{ scope.row.cluster }}
@@ -94,33 +100,33 @@
           </template>
         </el-table-column>
         
-        <el-table-column prop="external_ip" label="外部 IP" width="140" />
+        <el-table-column prop="external_ip" label="外部 IP" width="130" />
         
-        <el-table-column prop="internal_ip" label="内部 IP" width="140" />
+        <el-table-column prop="internal_ip" label="内部 IP" width="130" />
         
-        <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="description" label="描述" min-width="220" show-overflow-tooltip />
         
-        <el-table-column prop="vm_name" label="名称" min-width="150">
+        <el-table-column prop="vm_name" label="名称" min-width="140">
           <template slot-scope="scope">
             <el-tag size="small" effect="plain">{{ scope.row.vm_name }}</el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column prop="status" label="状态" width="80">
+        <el-table-column prop="status" label="状态" width="70" align="center">
           <template slot-scope="scope">
-            <el-tag size="small" :type="getStatusType(scope.row.status)">
+            <el-tag size="small" type="success">
               {{ getStatusText(scope.row.status) }}
             </el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column prop="tenant" label="租户" width="100">
+        <el-table-column prop="tenant" label="租户" width="100" align="center">
           <template slot-scope="scope">
             <span style="color: #67C23A">{{ scope.row.tenant }}</span>
           </template>
         </el-table-column>
         
-        <el-table-column prop="cpu_cores" label="VCPU" width="70" align="center">
+        <el-table-column prop="cpu_cores" label="VCPUS" width="70" align="center">
           <template slot-scope="scope">
             {{ scope.row.cpu_cores }}
           </template>
@@ -132,7 +138,7 @@
           </template>
         </el-table-column>
         
-        <el-table-column prop="disk_gb" label="硬盘" width="90" align="center">
+        <el-table-column prop="disk_gb" label="硬盘" width="80" align="center">
           <template slot-scope="scope">
             {{ scope.row.disk_gb }} MB
           </template>
@@ -147,7 +153,7 @@
               target="_blank"
               :underline="false"
             >
-              <i class="el-icon-link"></i> {{ scope.row.access_url }}
+              {{ getDomain(scope.row.access_url) }}
             </el-link>
             <span v-else style="color: #C0C4CC">-</span>
           </template>
@@ -158,7 +164,6 @@
             <el-button 
               size="mini" 
               type="warning" 
-              plain
               icon="el-icon-edit"
               circle
               @click="handleEdit(scope.row)"
@@ -166,7 +171,6 @@
             <el-button 
               size="mini" 
               type="danger" 
-              plain
               icon="el-icon-delete"
               circle
               @click="handleDelete(scope.row)"
@@ -177,7 +181,10 @@
       
       <!-- 批量操作栏 -->
       <div v-if="selectedRows.length > 0" class="batch-actions">
-        <el-button size="small" type="primary" @click="handleBatchEdit">
+        <el-button size="small" type="success">
+          <i class="el-icon-plus"></i> 添加组件
+        </el-button>
+        <el-button size="small" type="warning" @click="handleBatchEdit">
           <i class="el-icon-edit"></i> 修改选中项
         </el-button>
         <el-button size="small" type="warning" @click="handleBatchRename">
@@ -194,20 +201,12 @@
           background
           layout="total, prev, pager, next, jumper, sizes"
           :total="pagination.total"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[12, 20, 50, 100]"
           :page-size="pagination.per_page"
           :current-page="pagination.page"
           @current-change="handlePageChange"
           @size-change="handleSizeChange"
         />
-        <div class="page-size-selector">
-          <el-select v-model="pagination.per_page" size="small" @change="handleSizeChange">
-            <el-option label="10 页" :value="10" />
-            <el-option label="20 页" :value="20" />
-            <el-option label="50 页" :value="50" />
-            <el-option label="100 页" :value="100" />
-          </el-select>
-        </div>
       </div>
     </el-card>
 
@@ -385,6 +384,15 @@ export default {
     this.loadVMs()
   },
   methods: {
+    getDomain(url) {
+      try {
+        const urlObj = new URL(url)
+        return urlObj.hostname
+      } catch (e) {
+        return url
+      }
+    },
+    
     async loadStats() {
       try {
         const response = await fetchVMStats()
@@ -600,19 +608,31 @@ export default {
   min-height: calc(100vh - 84px);
 }
 
-.filter-card {
+.toolbar-card {
   margin-bottom: 20px;
   border-radius: 4px;
 }
 
-.filter-form {
-  padding: 10px 0;
+.toolbar-card ::v-deep .el-card__body {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.filter-actions {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #EBEEF5;
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .table-card {
@@ -639,23 +659,17 @@ export default {
 
 .batch-actions {
   margin-top: 15px;
-  padding: 10px 0;
-  border-top: 1px solid #EBEEF5;
+  padding: 12px 16px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .pagination {
   margin-top: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.page-size-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  justify-content: flex-end;
 }
 
 ::v-deep .el-table {
@@ -670,5 +684,15 @@ export default {
 
 ::v-deep .el-tag--small {
   padding: 2px 8px;
+}
+
+::v-deep .el-button--success {
+  background-color: #67C23A;
+  border-color: #67C23A;
+}
+
+::v-deep .el-button--warning {
+  background-color: #E6A23C;
+  border-color: #E6A23C;
 }
 </style>
