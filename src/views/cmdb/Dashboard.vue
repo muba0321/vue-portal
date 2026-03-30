@@ -214,23 +214,22 @@
     <el-dialog 
       :title="dialogMode === 'add' ? '添加虚拟机' : '编辑虚拟机'" 
       :visible.sync="dialogVisible"
-      width="700px"
+      width="600px"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" :rules="rules" ref="vmForm" label-width="100px">
+      <el-form :model="form" :rules="rules" ref="vmForm" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="集群" prop="cluster">
-              <el-select v-model="form.cluster" placeholder="选择集群">
-                <el-option label="Infrastructure-Cluster" value="Infrastructure-Cluster" />
-                <el-option label="K8s-Production" value="K8s-Production" />
+              <el-select v-model="form.cluster" placeholder="选择集群" style="width: 100%">
                 <el-option label="OpenClaw-Main" value="OpenClaw-Main" />
+                <el-option label="K8s-Production" value="K8s-Production" />
               </el-select>
             </el-form-item>
           </el-col>
           
           <el-col :span="12">
-            <el-form-item label="虚拟机名称" prop="vm_name">
+            <el-form-item label="名称" prop="vm_name">
               <el-input v-model="form.vm_name" placeholder="vm-web-01" />
             </el-form-item>
           </el-col>
@@ -252,28 +251,28 @@
         
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="描述" prop="description">
-              <el-input v-model="form.description" placeholder="OpenClaw 主节点 - 文档归档/Git 推送" />
+            <el-form-item label="描述">
+              <el-input v-model="form.description" type="textarea" :rows="2" placeholder="可选" />
             </el-form-item>
           </el-col>
         </el-row>
         
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-form-item label="CPU(核)" prop="cpu_cores">
-              <el-input-number v-model="form.cpu_cores" :min="0" :max="128" />
+            <el-form-item label="CPU" prop="cpu_cores">
+              <el-input-number v-model="form.cpu_cores" :min="1" :max="64" style="width: 100%" />
             </el-form-item>
           </el-col>
           
           <el-col :span="8">
             <el-form-item label="内存 (GB)" prop="memory_gb">
-              <el-input-number v-model="form.memory_gb" :min="0" :max="1024" />
+              <el-input-number v-model="form.memory_gb" :min="1" :max="512" style="width: 100%" />
             </el-form-item>
           </el-col>
           
           <el-col :span="8">
             <el-form-item label="磁盘 (GB)" prop="disk_gb">
-              <el-input-number v-model="form.disk_gb" :min="0" :max="10240" />
+              <el-input-number v-model="form.disk_gb" :min="10" :max="2000" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -281,25 +280,16 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
-              <el-select v-model="form.status" placeholder="选择状态">
+              <el-select v-model="form.status" placeholder="选择状态" style="width: 100%">
                 <el-option label="在线" value="running" />
                 <el-option label="离线" value="stopped" />
-                <el-option label="异常" value="error" />
               </el-select>
             </el-form-item>
           </el-col>
           
           <el-col :span="12">
-            <el-form-item label="租户" prop="tenant">
-              <el-input v-model="form.tenant" placeholder="OpenClaw" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        
-        <el-row :gutter="20">
-          <el-col :span="24">
             <el-form-item label="访问 URL">
-              <el-input v-model="form.access_url" placeholder="http://example.com" />
+              <el-input v-model="form.access_url" placeholder="https://..." />
             </el-form-item>
           </el-col>
         </el-row>
