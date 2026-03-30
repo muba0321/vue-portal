@@ -36,7 +36,24 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    before: require('./mock/mock-server.js'),
+    proxy: {
+      '/cmdb-api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/cmdb-api': '/cmdb-api'
+        }
+      },
+      '/prod-api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true
+      },
+      '/dev-api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
