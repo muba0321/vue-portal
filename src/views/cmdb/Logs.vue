@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import { logApi } from '@/api'
+import { fetchSyncLogs } from '@/api/cmdb'
 
 export default {
-  name: 'Logs',
+  name: 'CmdbLogs',
   
   data() {
     return {
@@ -86,23 +86,23 @@ export default {
   },
   
   methods: {
-    fetchLogs() {
+    async fetchLogs() {
       this.loading = true
-      logApi.getList({
-        page: this.page,
-        page_size: this.pageSize
-      })
-        .then(response => {
-          const data = response.data || response
-          this.logs = data.list || []
-          this.total = data.total || 0
+      try {
+        const response = await fetchSyncLogs({
+          page: this.page,
+          per_page: this.pageSize
         })
-        .catch(error => {
-          console.error('Failed to fetch logs:', error)
-        })
-        .finally(() => {
-          this.loading = false
-        })
+        if (response.success) {
+          this.logs = response.data || []
+          this.total = response.pagination?.total || 0
+        }
+      } catch (error) {
+        console.error('Failed to fetch logs:', error)
+        this.$message.error('加载日志失败')
+      } finally {
+        this.loading = false
+      }
     },
     
     handlePageChange(page) {
